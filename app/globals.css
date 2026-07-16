@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 :root {
+  --font-geist-mono: "IBM Plex Mono", "Cascadia Code", "SFMono-Regular", Consolas, monospace;
   --ink: #090a0d;
   --panel: #111318;
   --panel-2: #171a20;

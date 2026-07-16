@@ -32,7 +32,7 @@ const projects = [
     description:
       "Identified and documented nine vulnerabilities—including four critical findings—across access control and input-handling surfaces.",
     outcomes: ["Privilege escalation", "IDOR", "Stored XSS", "Formal VAPT report"],
-    href: "/Ramkumar-M-Sanitized-VAPT-Case-Study.pdf",
+    href: "./Ramkumar-M-Sanitized-VAPT-Case-Study.pdf",
     linkLabel: "View proof brief",
     accent: "critical",
   },
@@ -106,7 +106,7 @@ export default function Home() {
           </p>
           <div className="hero-actions">
             <a className="button button-primary" href="#work">Explore my work <span aria-hidden="true">↓</span></a>
-            <a className="button button-ghost" href="/Ramkumar-M-VAPT-Resume.pdf" download>
+            <a className="button button-ghost" href="./Ramkumar-M-VAPT-Resume.pdf" download>
               Download résumé <span aria-hidden="true">↗</span>
             </a>
           </div>
@@ -119,7 +119,7 @@ export default function Home() {
           </div>
           <div className="profile-visual">
             <img
-              src="/ramkumar-profile.webp"
+              src="./ramkumar-profile.webp"
               alt="Portrait of Ramkumar M"
               width={900}
               height={900}
@@ -232,7 +232,7 @@ export default function Home() {
             <span className="credential-org">ShadowFox · June 2026</span>
             <a
               className="credential-link"
-              href="/Ramkumar-M-ShadowFox-Internship-Certificate.pdf"
+              href="./Ramkumar-M-ShadowFox-Internship-Certificate.pdf"
               target="_blank"
               rel="noreferrer"
             >
@@ -282,7 +282,7 @@ export default function Home() {
               <p>Simulated 5+ penetration-testing scenarios, uncovered 10+ vulnerabilities and misconfigurations, and authored structured remediation documentation.</p>
               <a
                 className="timeline-proof-link"
-                href="/Ramkumar-M-ShadowFox-Internship-Certificate.pdf"
+                href="./Ramkumar-M-ShadowFox-Internship-Certificate.pdf"
                 target="_blank"
                 rel="noreferrer"
               >

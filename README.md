@@ -2,6 +2,8 @@
 
 A responsive, production-ready cybersecurity portfolio built around Ramkumar's real VAPT work, technical stack, lab activity, and experience. It includes an accessible three-attempt security guessing game.
 
+**Live site:** [mike-rk.github.io/ramkumar-cyber-portfolio](https://mike-rk.github.io/ramkumar-cyber-portfolio/)
+
 ## Features
 
 - Recruiter-focused hero, projects, technical arsenal, experience, education, and contact sections
@@ -21,6 +23,7 @@ A responsive, production-ready cybersecurity portfolio built around Ramkumar's r
 - Next.js-compatible Vinext runtime
 - CSS with responsive media queries and motion preferences
 - Cloudflare Workers deployment target via OpenAI Sites
+- GitHub Pages static deployment through GitHub Actions
 
 ## Local setup
 
@@ -32,6 +35,14 @@ npm run dev
 ```
 
 Open the local URL shown by the development server.
+
+To create the GitHub Pages build locally:
+
+```bash
+npm run build:pages
+```
+
+The deployment workflow publishes `dist-pages` whenever `main` is updated.
 
 ## Production checks
 
@@ -49,6 +60,8 @@ The application is static and does not require environment variables, a database
 - `app/CyberChallenge.tsx` — three-attempt guessing game logic
 - `app/globals.css` — visual system and responsive behavior
 - `app/layout.tsx` — metadata and global font setup
+- `github-pages/main.tsx` — GitHub Pages browser entry point
+- `.github/workflows/deploy-pages.yml` — automated Pages deployment
 
 ## Customize
 

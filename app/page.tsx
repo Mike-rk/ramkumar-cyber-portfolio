@@ -246,6 +246,49 @@ export default function Home() {
             <span className="credential-org">TryHackMe · 80+ labs</span>
           </article>
         </div>
+        <div className="lab-profile-grid" aria-label="Public hands-on security lab profiles">
+          <a
+            className="lab-profile-card tryhackme-profile"
+            href="https://tryhackme.com/p/raamk575/"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Open Ramkumar's TryHackMe profile"
+          >
+            <div className="lab-profile-top">
+              <span>TRYHACKME_PROFILE</span>
+              <span className="profile-verified"><i /> PUBLIC</span>
+            </div>
+            <div className="lab-profile-main">
+              <strong>TOP 3%</strong>
+              <div>
+                <h3>raamk575</h3>
+                <p>80+ hands-on labs spanning web exploitation, networking, Linux, and offensive-security fundamentals.</p>
+              </div>
+            </div>
+            <span className="lab-profile-action">View verified activity <span aria-hidden="true">↗</span></span>
+          </a>
+
+          <a
+            className="lab-profile-card htb-profile"
+            href="https://profile.hackthebox.com/profile/019f455f-fa7c-73f5-b966-3dbe3c82c079"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Open Ramkumar's Hack The Box profile"
+          >
+            <div className="lab-profile-top">
+              <span>HTB_PROFILE</span>
+              <span className="profile-verified"><i /> PUBLIC</span>
+            </div>
+            <div className="lab-profile-main">
+              <strong>ACTIVE</strong>
+              <div>
+                <h3>Hack The Box</h3>
+                <p>Ongoing offensive-security practice through lab machines and CTF-style technical challenges.</p>
+              </div>
+            </div>
+            <span className="lab-profile-action">View public profile <span aria-hidden="true">↗</span></span>
+          </a>
+        </div>
       </section>
 
       <section className="section challenge-section" id="challenge">
@@ -368,6 +411,8 @@ export default function Home() {
           <a href="https://linkedin.com/in/ram-kumar45/" target="_blank" rel="noreferrer">LinkedIn ↗</a>
           <a href="https://github.com/mike-rk" target="_blank" rel="noreferrer">GitHub ↗</a>
           <a href="https://medium.com/@raamkz900" target="_blank" rel="noreferrer">Medium ↗</a>
+          <a href="https://tryhackme.com/p/raamk575/" target="_blank" rel="noreferrer">TryHackMe ↗</a>
+          <a href="https://profile.hackthebox.com/profile/019f455f-fa7c-73f5-b966-3dbe3c82c079" target="_blank" rel="noreferrer">HTB ↗</a>
           <a href="mailto:raamk575@gmail.com">Email ↗</a>
         </div>
         <p>© 2026 Ramkumar M. Built with intent.</p>

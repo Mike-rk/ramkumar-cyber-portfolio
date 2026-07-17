@@ -35,6 +35,51 @@ button, a { -webkit-tap-highlight-color: transparent; }
 
 :focus-visible { outline: 2px solid var(--acid); outline-offset: 4px; }
 
+.scroll-progress {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 100;
+  height: 3px;
+  pointer-events: none;
+  background: rgba(255, 255, 255, .025);
+}
+.scroll-progress span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, var(--acid), var(--cyan), var(--violet));
+  box-shadow: 0 0 18px rgba(216, 255, 95, .42);
+  transform: scaleX(var(--scroll-progress, 0));
+  transform-origin: left center;
+  will-change: transform;
+}
+
+.motion-ready .scroll-reveal {
+  opacity: 0;
+  filter: blur(7px);
+  transform: translate3d(0, 42px, 0) scale(.985);
+  transition:
+    opacity .75s cubic-bezier(.2, .7, .2, 1),
+    filter .75s cubic-bezier(.2, .7, .2, 1),
+    transform .75s cubic-bezier(.2, .7, .2, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, filter, transform;
+}
+.motion-ready .project-card.scroll-reveal,
+.motion-ready .timeline article.scroll-reveal { transform: translate3d(-38px, 0, 0); }
+.motion-ready .skill-card.scroll-reveal,
+.motion-ready .credential-grid article.scroll-reveal,
+.motion-ready .value-grid article.scroll-reveal { transform: translate3d(0, 30px, 0) scale(.94); }
+.motion-ready .lab-profile-card.scroll-reveal {
+  transform: perspective(900px) translate3d(0, 46px, 0) rotateX(5deg);
+  transform-origin: center bottom;
+}
+.motion-ready .scroll-reveal.is-visible {
+  opacity: 1;
+  filter: none;
+  transform: none;
+}
+
 .topbar {
   position: sticky;
   top: 0;
@@ -72,7 +117,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   align-content: space-between;
 }
 
-.hero-grid { position: absolute; inset: 0; pointer-events: none; opacity: .26; background-image: linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px); background-size: 64px 64px; mask-image: linear-gradient(to bottom, black, transparent 82%); }
+.hero-grid { position: absolute; inset: -60px 0 0; pointer-events: none; opacity: .26; background-image: linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px); background-size: 64px 64px; mask-image: linear-gradient(to bottom, black, transparent 82%); transform: translate3d(0, var(--hero-shift, 0), 0); will-change: transform; }
 .hero::before { content: ""; position: absolute; width: 530px; height: 530px; right: 3%; top: 5%; border-radius: 50%; background: var(--violet); opacity: .08; filter: blur(110px); }
 .hero-copy, .signal-card, .hero-metrics { position: relative; z-index: 1; }
 
@@ -80,6 +125,16 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .eyebrow { color: var(--acid); display: flex; align-items: center; gap: 10px; }
 .pulse-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--acid); box-shadow: 0 0 0 6px rgba(216,255,95,.08); animation: pulse 2s infinite; }
 @keyframes pulse { 50% { box-shadow: 0 0 0 10px rgba(216,255,95,0); } }
+@keyframes hero-enter {
+  from { opacity: 0; filter: blur(8px); transform: translate3d(0, 30px, 0); }
+  to { opacity: 1; filter: none; transform: none; }
+}
+.hero-copy > .eyebrow { animation: hero-enter .65s cubic-bezier(.2,.7,.2,1) .05s both; }
+.hero-copy > h1 { animation: hero-enter .8s cubic-bezier(.2,.7,.2,1) .13s both; }
+.hero-copy > .hero-intro { animation: hero-enter .8s cubic-bezier(.2,.7,.2,1) .22s both; }
+.hero-copy > .hero-actions { animation: hero-enter .75s cubic-bezier(.2,.7,.2,1) .31s both; }
+.signal-card { animation: hero-enter .9s cubic-bezier(.2,.7,.2,1) .24s both; }
+.hero-metrics { animation: hero-enter .9s cubic-bezier(.2,.7,.2,1) .44s both; }
 
 .hero h1 { margin: 35px 0 28px; max-width: 850px; font-size: clamp(62px, 7.6vw, 116px); font-weight: 520; line-height: .9; letter-spacing: -.075em; }
 .hero h1 span { display: block; color: transparent; -webkit-text-stroke: 1px rgba(241,241,233,.48); }
@@ -171,19 +226,23 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .credential-heading .section-kicker { color: var(--orange); }
 .credential-heading h2 { max-width: 780px; margin: 14px 0 0; font-size: clamp(46px, 6vw, 86px); font-weight: 520; line-height: .98; letter-spacing: -.065em; }
 .credential-heading > p { margin: 0; color: #92969f; font-size: 15px; line-height: 1.7; }
-.credential-grid { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
-.credential-grid article { position: relative; min-height: 265px; padding: 28px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); overflow: hidden; }
+.credential-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+.credential-grid article { position: relative; grid-column: span 4; min-height: 300px; padding: 28px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); overflow: hidden; }
+.credential-grid article:nth-child(n + 4) { grid-column: span 6; }
 .credential-grid article::after { content: "✓"; position: absolute; right: 24px; top: 24px; width: 25px; height: 25px; border: 1px solid #4d525d; border-radius: 50%; display: grid; place-items: center; color: #777c85; font: 10px var(--font-geist-mono), monospace; }
 .credential-grid .credential-highlight { background: var(--acid); color: var(--ink); }
 .credential-grid .credential-highlight::after { border-color: #7c902b; color: #4e5c13; }
 .credential-code { color: var(--orange); font: 9px var(--font-geist-mono), monospace; letter-spacing: .14em; }
 .credential-highlight .credential-code { color: #607018; }
-.credential-grid article > p { margin: 82px 0 8px; color: #6f747d; font: 9px var(--font-geist-mono), monospace; text-transform: uppercase; letter-spacing: .1em; }
+.credential-grid article > p { margin: 66px 0 8px; color: #6f747d; font: 9px var(--font-geist-mono), monospace; text-transform: uppercase; letter-spacing: .1em; }
 .credential-highlight > p { color: #58651a !important; }
 .credential-grid h3 { margin: 0 0 11px; font-size: 25px; font-weight: 560; letter-spacing: -.035em; }
-.credential-org { color: #8d9199; font: 10px var(--font-geist-mono), monospace; }
+.credential-org { display: block; color: #8d9199; font: 10px var(--font-geist-mono), monospace; }
 .credential-highlight .credential-org { color: #4b5619; }
 .credential-proof { background: rgba(184,167,255,.07); }
+.credential-cisco { background: linear-gradient(145deg, rgba(109,231,231,.11), rgba(109,231,231,.015) 62%); }
+.credential-google { background: linear-gradient(145deg, rgba(184,167,255,.12), rgba(184,167,255,.015) 62%); }
+.credential-simplilearn { background: linear-gradient(145deg, rgba(255,156,96,.12), rgba(255,156,96,.015) 62%); }
 .credential-link, .timeline-proof-link { display: inline-flex; align-items: center; gap: 8px; color: var(--acid); font: 9px var(--font-geist-mono), monospace; text-transform: uppercase; letter-spacing: .06em; border-bottom: 1px solid rgba(216,255,95,.45); padding-bottom: 5px; }
 .credential-link { margin-top: 24px; }
 .credential-link:hover, .timeline-proof-link:hover { color: var(--paper); border-color: var(--paper); }
@@ -294,6 +353,9 @@ footer > p { justify-self: end; font: 9px var(--font-geist-mono), monospace; tex
   .hero-metrics div:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
   .section-heading, .credential-heading, .value-heading, .challenge-section, .about-section { grid-template-columns: 1fr; }
   .credential-grid { grid-template-columns: repeat(2, 1fr); }
+  .credential-grid article,
+  .credential-grid article:nth-child(n + 4) { grid-column: auto; }
+  .credential-grid article:last-child { grid-column: 1 / -1; }
   .lab-profile-main { grid-template-columns: 1fr; align-items: start; gap: 20px; }
   .skill-grid { grid-template-columns: repeat(2, 1fr); }
   .value-grid { grid-template-columns: repeat(2, 1fr); }
@@ -331,8 +393,9 @@ footer > p { justify-self: end; font: 9px var(--font-geist-mono), monospace; tex
   .skill-grid { grid-template-columns: 1fr; }
   .skill-card { min-height: 280px; }
   .method-strip ol { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
-  .credential-grid article { min-height: 235px; }
+  .credential-grid article { min-height: 285px; }
   .credential-grid { grid-template-columns: 1fr; }
+  .credential-grid article:last-child { grid-column: auto; }
   .lab-profile-grid { grid-template-columns: 1fr; }
   .lab-profile-card { min-height: 270px; padding: 24px; }
   .lab-profile-main { margin: 40px 0 30px; }

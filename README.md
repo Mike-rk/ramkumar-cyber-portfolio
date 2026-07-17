@@ -11,6 +11,8 @@ A responsive, production-ready cybersecurity portfolio built around Ramkumar's r
 - Sanitized public evidence brief derived from a confidential nine-finding VAPT assessment
 - Medium security write-ups alongside GitHub projects
 - Public TryHackMe and Hack The Box activity profiles with direct recruiter links
+- Viewable Cisco, Google/Coursera, Simplilearn, and ShadowFox certificate proofs
+- Scroll-triggered section reveals, staggered card motion, hero parallax, and reading progress feedback
 - Four rotating cybersecurity challenges with case-insensitive answer matching
 - Three-attempt limit, per-attempt feedback, automatic answer reveal, and restart flow
 - Responsive layout for desktop, tablet, and mobile

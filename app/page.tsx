@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element -- local static portrait, no remote optimization needed */
 import CyberChallenge from "./CyberChallenge";
+import ScrollAnimations from "./ScrollAnimations";
 
 const skills = [
   {
@@ -74,6 +75,7 @@ const projects = [
 export default function Home() {
   return (
     <main>
+      <ScrollAnimations />
       <nav className="topbar" aria-label="Primary navigation">
         <a className="brand" href="#top" aria-label="Ramkumar M home">
           <span className="brand-mark" aria-hidden="true">RM</span>
@@ -107,7 +109,7 @@ export default function Home() {
           <div className="hero-actions">
             <a className="button button-primary" href="#work">Explore my work <span aria-hidden="true">↓</span></a>
             <a className="button button-ghost" href="./Ramkumar-M-VAPT-Resume.pdf" download>
-              Download résumé <span aria-hidden="true">↗</span>
+              Download My Resume
             </a>
           </div>
         </div>
@@ -213,20 +215,50 @@ export default function Home() {
           <p>Formal foundations reinforced through consistent, hands-on practice.</p>
         </div>
         <div className="credential-grid">
-          <article>
+          <article className="credential-proof credential-cisco">
             <span className="credential-code">CISCO_01</span>
-            <p>Certificate of completion</p>
+            <p>Verified course completion</p>
             <h3>Introduction to Cybersecurity</h3>
-            <span className="credential-org">Cisco Networking Academy</span>
+            <span className="credential-org">Cisco Networking Academy · May 2026</span>
+            <a
+              className="credential-link"
+              href="./Ramkumar-M-Cisco-Introduction-to-Cybersecurity.pdf"
+              target="_blank"
+              rel="noreferrer"
+            >
+              View certificate <span aria-hidden="true">↗</span>
+            </a>
           </article>
-          <article>
-            <span className="credential-code">SIMPLILEARN_02</span>
-            <p>Certificate of completion</p>
-            <h3>Cyber Security</h3>
-            <span className="credential-org">Simplilearn</span>
+          <article className="credential-proof credential-google">
+            <span className="credential-code">GOOGLE_02</span>
+            <p>Verified course completion</p>
+            <h3>Foundations of Cybersecurity</h3>
+            <span className="credential-org">Google · Coursera · June 2026</span>
+            <a
+              className="credential-link"
+              href="./Ramkumar-M-Google-Foundations-of-Cybersecurity.pdf"
+              target="_blank"
+              rel="noreferrer"
+            >
+              View certificate <span aria-hidden="true">↗</span>
+            </a>
+          </article>
+          <article className="credential-proof credential-simplilearn">
+            <span className="credential-code">SIMPLILEARN_03</span>
+            <p>Verified course completion</p>
+            <h3>Ethical Hacking 101</h3>
+            <span className="credential-org">Simplilearn SkillUp · June 2025</span>
+            <a
+              className="credential-link"
+              href="./Ramkumar-M-Simplilearn-Ethical-Hacking-101.pdf"
+              target="_blank"
+              rel="noreferrer"
+            >
+              View certificate <span aria-hidden="true">↗</span>
+            </a>
           </article>
           <article className="credential-proof">
-            <span className="credential-code">SHADOWFOX_03</span>
+            <span className="credential-code">SHADOWFOX_04</span>
             <p>Verified internship completion</p>
             <h3>Cyber Security Internship</h3>
             <span className="credential-org">ShadowFox · June 2026</span>
@@ -240,7 +272,7 @@ export default function Home() {
             </a>
           </article>
           <article className="credential-highlight">
-            <span className="credential-code">PRACTICE_04</span>
+            <span className="credential-code">PRACTICE_05</span>
             <p>Global lab ranking</p>
             <h3>Top 3%</h3>
             <span className="credential-org">TryHackMe · 80+ labs</span>
@@ -261,7 +293,7 @@ export default function Home() {
             <div className="lab-profile-main">
               <strong>TOP 3%</strong>
               <div>
-                <h3>raamk575</h3>
+                <h3>TryHackMe</h3>
                 <p>80+ hands-on labs spanning web exploitation, networking, Linux, and offensive-security fundamentals.</p>
               </div>
             </div>

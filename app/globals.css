@@ -325,7 +325,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .value-section { max-width: none; margin: 0; padding-left: max(28px, calc((100vw - var(--max-width)) / 2)); padding-right: max(28px, calc((100vw - var(--max-width)) / 2)); background: var(--violet); color: var(--ink); }
 .value-heading { display: grid; grid-template-columns: 1.35fr .65fr; align-items: end; gap: 70px; }
 .value-heading .section-kicker { color: #504284; }
-.value-heading h2 { max-width: 780px; margin: 14px 0 0; font-size: clamp(46px, 6vw, 86px); font-weight: 520; line-height: .98; letter-spacing: -.065em; }
+.value-subheading { margin: 10px 0 0; color: #5c527d; font-size: clamp(22px, 2.6vw, 34px); font-weight: 600; letter-spacing: -.02em; text-transform: none; }
 .target-role-box { padding: 22px; border: 1px solid rgba(9,10,13,.28); background: rgba(241,241,233,.16); }
 .target-role-box > span { display: block; margin-bottom: 18px; color: #5c527d; font: 700 8px var(--font-geist-mono), monospace; letter-spacing: .14em; }
 .target-role-box strong { display: block; padding: 9px 0; border-top: 1px solid rgba(9,10,13,.18); font-size: 13px; }

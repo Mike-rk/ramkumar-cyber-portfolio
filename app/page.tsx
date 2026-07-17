@@ -386,23 +386,24 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section value-section" id="value">
-        <div className="value-heading">
-          <div>
-            <p className="section-kicker">06 / WHAT I BRING</p>
-            <h2>Security findings your team can act on.</h2>
-          </div>
-          <div className="target-role-box">
-            <span>ROLES I&apos;M PURSUING</span>
-            <strong>VAPT Analyst</strong>
-            <strong>Junior Penetration Tester</strong>
-            <strong>Application Security Analyst</strong>
-          </div>
-        </div>
-        <p className="value-intro">
-          If you hire me, I will bring a disciplined attacker mindset—not just run scanners. I will map your attack surface, manually verify exploitable weaknesses, communicate business impact clearly, and work with developers to confirm effective fixes.
-        </p>
-        <div className="value-grid">
+     <section className="section value-section" id="value">
+  <div className="value-heading">
+    <div>
+      <p className="section-kicker">06 / WHAT I BRING</p>
+      <h2>Security findings your team can act on.</h2>
+      <p className="value-subheading">What I Bring to Your Team</p>
+    </div>
+    <div className="target-role-box">
+      <span>ROLES I&apos;M PURSUING</span>
+      <strong>VAPT Analyst</strong>
+      <strong>Junior Penetration Tester</strong>
+      <strong>Application Security Analyst</strong>
+    </div>
+  </div>
+  <p className="value-intro">
+    I bring an attacker&apos;s mindset backed by disciplined security practices. By combining automated assessments with thorough manual validation, I identify real-world vulnerabilities, reduce false positives, prioritize risks based on business impact, and deliver clear, actionable remediation guidance that strengthens application security and supports secure software development.
+  </p>
+  <div className="value-grid">
           <article>
             <span>01</span>
             <h3>Map the attack surface</h3>

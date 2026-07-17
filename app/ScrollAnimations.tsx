@@ -18,7 +18,6 @@ const REVEAL_SELECTOR = [
   ".value-intro",
   ".value-grid article",
   ".contact-section > *",
-  "footer > *",
 ].join(",");
 
 export default function ScrollAnimations() {
@@ -42,9 +41,14 @@ export default function ScrollAnimations() {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          entry.target.classList.add("is-visible");
-          observer.unobserve(entry.target);
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            return;
+          }
+
+          const exitedAboveViewport = entry.boundingClientRect.top < 0;
+          entry.target.classList.toggle("reveal-from-top", exitedAboveViewport);
+          entry.target.classList.remove("is-visible");
         });
       },
       { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
@@ -84,7 +88,7 @@ export default function ScrollAnimations() {
       root.classList.remove("motion-ready");
       root.style.removeProperty("--hero-shift");
       targets.forEach((target) => {
-        target.classList.remove("scroll-reveal", "is-visible");
+        target.classList.remove("scroll-reveal", "is-visible", "reveal-from-top");
         target.style.removeProperty("--reveal-delay");
       });
     };

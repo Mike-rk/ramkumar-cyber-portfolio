@@ -74,10 +74,20 @@ button, a { -webkit-tap-highlight-color: transparent; }
   transform: perspective(900px) translate3d(0, 46px, 0) rotateX(5deg);
   transform-origin: center bottom;
 }
+.motion-ready .scroll-reveal.reveal-from-top { transform: translate3d(0, -42px, 0) scale(.985); }
+.motion-ready .project-card.scroll-reveal.reveal-from-top,
+.motion-ready .timeline article.scroll-reveal.reveal-from-top { transform: translate3d(-38px, -18px, 0); }
+.motion-ready .skill-card.scroll-reveal.reveal-from-top,
+.motion-ready .credential-grid article.scroll-reveal.reveal-from-top,
+.motion-ready .value-grid article.scroll-reveal.reveal-from-top { transform: translate3d(0, -30px, 0) scale(.94); }
+.motion-ready .lab-profile-card.scroll-reveal.reveal-from-top {
+  transform: perspective(900px) translate3d(0, -46px, 0) rotateX(-5deg);
+  transform-origin: center top;
+}
 .motion-ready .scroll-reveal.is-visible {
   opacity: 1;
   filter: none;
-  transform: none;
+  transform: none !important;
 }
 
 .topbar {
@@ -335,7 +345,8 @@ button, a { -webkit-tap-highlight-color: transparent; }
 
 footer { max-width: var(--max-width); min-height: 160px; margin: 0 auto; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 30px; color: #858991; }
 .footer-brand small { color: #656a73; font-weight: 400; letter-spacing: .04em; }
-.footer-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px 22px; font: 10px var(--font-geist-mono), monospace; }
+.footer-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px 22px; color: #c7c9ce; font: 10px var(--font-geist-mono), monospace; }
+.footer-links a { opacity: 1; visibility: visible; }
 footer > p { justify-self: end; font: 9px var(--font-geist-mono), monospace; text-transform: uppercase; }
 
 @media (max-width: 1280px) {

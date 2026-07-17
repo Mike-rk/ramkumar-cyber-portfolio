@@ -390,7 +390,7 @@ export default function Home() {
   <div className="value-heading">
     <div>
       <p className="section-kicker">06 / WHAT I BRING</p>
-      <h2>Security findings your team can act on.</h2>
+      <h2>Security findings your team can act on</h2>
       <p className="value-subheading">What I Bring to Your Team</p>
     </div>
     <div className="target-role-box">

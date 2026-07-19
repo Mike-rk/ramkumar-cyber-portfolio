@@ -20,13 +20,36 @@ const REVEAL_SELECTOR = [
   ".contact-section > *",
 ].join(",");
 
+const MOTION_CARD_SELECTOR = [
+  ".signal-card",
+  ".project-card",
+  ".skill-card",
+  ".credential-grid article",
+  ".lab-profile-card",
+  ".game-card",
+  ".timeline article",
+  ".target-role-box",
+  ".value-grid article",
+].join(",");
+
+const MAGNETIC_SELECTOR = ".button, .nav-cta";
+const INTERACTIVE_SELECTOR = "a, button, input, .motion-card";
+
 export default function ScrollAnimations() {
   const progressRef = useRef<HTMLSpanElement>(null);
+  const cursorDotRef = useRef<HTMLSpanElement>(null);
+  const cursorRingRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     const root = document.documentElement;
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const finePointer = window.matchMedia("(pointer: fine)");
     const targets = Array.from(document.querySelectorAll<HTMLElement>(REVEAL_SELECTOR));
+    const motionCards = Array.from(document.querySelectorAll<HTMLElement>(MOTION_CARD_SELECTOR));
+    const magneticTargets = Array.from(document.querySelectorAll<HTMLElement>(MAGNETIC_SELECTOR));
+    const counters = Array.from(document.querySelectorAll<HTMLElement>("[data-count-to]"));
+    const topbar = document.querySelector<HTMLElement>(".topbar");
+    const signalCard = document.querySelector<HTMLElement>(".signal-card");
 
     targets.forEach((target) => {
       const matchingSiblings = target.parentElement
@@ -35,8 +58,10 @@ export default function ScrollAnimations() {
       const order = Math.max(0, matchingSiblings.indexOf(target));
 
       target.classList.add("scroll-reveal");
-      target.style.setProperty("--reveal-delay", `${Math.min(order, 5) * 75}ms`);
+      target.style.setProperty("--reveal-delay", `${Math.min(order, 5) * 82}ms`);
     });
+
+    motionCards.forEach((card) => card.classList.add("motion-card"));
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -51,7 +76,7 @@ export default function ScrollAnimations() {
           entry.target.classList.remove("is-visible");
         });
       },
-      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
+      { threshold: 0.13, rootMargin: "-4% 0px -10% 0px" },
     );
 
     if (reducedMotion.matches) {
@@ -61,18 +86,177 @@ export default function ScrollAnimations() {
       targets.forEach((target) => observer.observe(target));
     }
 
-    let frame = 0;
-    const updateScrollEffects = () => {
-      if (frame) return;
+    const counterFrames = new Map<HTMLElement, number>();
+    const renderCounter = (counter: HTMLElement, value: number) => {
+      const prefix = counter.dataset.countPrefix ?? "";
+      const suffix = counter.dataset.countSuffix ?? "";
+      counter.textContent = `${prefix}${value}${suffix}`;
+    };
+    const resetCounter = (counter: HTMLElement) => renderCounter(counter, 0);
+    const animateCounter = (counter: HTMLElement) => {
+      const previousFrame = counterFrames.get(counter);
+      if (previousFrame) window.cancelAnimationFrame(previousFrame);
 
-      frame = window.requestAnimationFrame(() => {
+      const target = Number(counter.dataset.countTo ?? 0);
+      const duration = Math.min(1450, 850 + target * 6);
+      const startedAt = window.performance.now();
+
+      const tick = (now: number) => {
+        const progress = Math.min((now - startedAt) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        renderCounter(counter, Math.round(target * eased));
+
+        if (progress < 1) {
+          counterFrames.set(counter, window.requestAnimationFrame(tick));
+        } else {
+          counterFrames.delete(counter);
+        }
+      };
+
+      counterFrames.set(counter, window.requestAnimationFrame(tick));
+    };
+
+    const counterObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const counter = entry.target as HTMLElement;
+          if (entry.isIntersecting) animateCounter(counter);
+          else resetCounter(counter);
+        });
+      },
+      { threshold: 0.8 },
+    );
+
+    if (reducedMotion.matches) {
+      counters.forEach((counter) => renderCounter(counter, Number(counter.dataset.countTo ?? 0)));
+    } else {
+      counters.forEach((counter) => {
+        resetCounter(counter);
+        counterObserver.observe(counter);
+      });
+    }
+
+    const interactionCleanups: Array<() => void> = [];
+
+    if (!reducedMotion.matches && finePointer.matches) {
+      motionCards.forEach((card) => {
+        const maxTilt = card.matches(".signal-card, .game-card") ? 3.5 : 5.5;
+        const onMove = (event: PointerEvent) => {
+          const rect = card.getBoundingClientRect();
+          const x = Math.min(Math.max((event.clientX - rect.left) / rect.width, 0), 1);
+          const y = Math.min(Math.max((event.clientY - rect.top) / rect.height, 0), 1);
+
+          card.style.setProperty("--tilt-x", `${(0.5 - y) * maxTilt}deg`);
+          card.style.setProperty("--tilt-y", `${(x - 0.5) * maxTilt}deg`);
+          card.style.setProperty("--glow-x", `${x * 100}%`);
+          card.style.setProperty("--glow-y", `${y * 100}%`);
+          card.classList.add("is-tilting");
+        };
+        const onLeave = () => {
+          card.style.setProperty("--tilt-x", "0deg");
+          card.style.setProperty("--tilt-y", "0deg");
+          card.classList.remove("is-tilting");
+        };
+
+        card.addEventListener("pointermove", onMove);
+        card.addEventListener("pointerleave", onLeave);
+        interactionCleanups.push(() => {
+          card.removeEventListener("pointermove", onMove);
+          card.removeEventListener("pointerleave", onLeave);
+        });
+      });
+
+      magneticTargets.forEach((target) => {
+        const onMove = (event: PointerEvent) => {
+          const rect = target.getBoundingClientRect();
+          const x = event.clientX - (rect.left + rect.width / 2);
+          const y = event.clientY - (rect.top + rect.height / 2);
+          target.style.setProperty("--magnet-x", `${x * 0.13}px`);
+          target.style.setProperty("--magnet-y", `${y * 0.18}px`);
+        };
+        const onLeave = () => {
+          target.style.setProperty("--magnet-x", "0px");
+          target.style.setProperty("--magnet-y", "0px");
+        };
+
+        target.addEventListener("pointermove", onMove);
+        target.addEventListener("pointerleave", onLeave);
+        interactionCleanups.push(() => {
+          target.removeEventListener("pointermove", onMove);
+          target.removeEventListener("pointerleave", onLeave);
+        });
+      });
+    }
+
+    let cursorFrame = 0;
+    let pointerX = -100;
+    let pointerY = -100;
+    let ringX = -100;
+    let ringY = -100;
+    const cursorDot = cursorDotRef.current;
+    const cursorRing = cursorRingRef.current;
+
+    const drawCursor = () => {
+      ringX += (pointerX - ringX) * 0.18;
+      ringY += (pointerY - ringY) * 0.18;
+      cursorRing?.style.setProperty("--cursor-x", `${ringX}px`);
+      cursorRing?.style.setProperty("--cursor-y", `${ringY}px`);
+      cursorFrame = window.requestAnimationFrame(drawCursor);
+    };
+    const onPointerMove = (event: PointerEvent) => {
+      pointerX = event.clientX;
+      pointerY = event.clientY;
+      cursorDot?.style.setProperty("--cursor-x", `${pointerX}px`);
+      cursorDot?.style.setProperty("--cursor-y", `${pointerY}px`);
+      cursorDot?.classList.add("is-visible");
+      cursorRing?.classList.add("is-visible");
+
+      const target = event.target instanceof Element ? event.target : null;
+      cursorRing?.classList.toggle("is-active", Boolean(target?.closest(INTERACTIVE_SELECTOR)));
+      cursorRing?.classList.toggle("is-reading", Boolean(target?.closest("h1, h2, h3, p")));
+    };
+    const hideCursor = () => {
+      cursorDot?.classList.remove("is-visible");
+      cursorRing?.classList.remove("is-visible", "is-active", "is-pressed", "is-reading");
+    };
+    const pressCursor = () => cursorRing?.classList.add("is-pressed");
+    const releaseCursor = () => cursorRing?.classList.remove("is-pressed");
+
+    if (!reducedMotion.matches && finePointer.matches && cursorDot && cursorRing) {
+      root.classList.add("has-custom-cursor");
+      cursorFrame = window.requestAnimationFrame(drawCursor);
+      window.addEventListener("pointermove", onPointerMove, { passive: true });
+      window.addEventListener("pointerdown", pressCursor, { passive: true });
+      window.addEventListener("pointerup", releaseCursor, { passive: true });
+      document.addEventListener("mouseleave", hideCursor);
+    }
+
+    let scrollFrame = 0;
+    let lastScrollY = window.scrollY;
+    const updateScrollEffects = () => {
+      if (scrollFrame) return;
+
+      scrollFrame = window.requestAnimationFrame(() => {
+        const scrollY = window.scrollY;
         const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-        const progress = maxScroll > 0 ? Math.min(window.scrollY / maxScroll, 1) : 0;
-        const heroShift = Math.min(window.scrollY * 0.08, 56);
+        const progress = maxScroll > 0 ? Math.min(scrollY / maxScroll, 1) : 0;
+        const heroShift = Math.min(scrollY * 0.09, 74);
+        const heroCopyShift = Math.min(scrollY * 0.045, 38);
+        const heroCopyOpacity = Math.max(1 - scrollY / Math.max(window.innerHeight * 0.95, 1), 0.32);
 
         progressRef.current?.style.setProperty("--scroll-progress", String(progress));
         root.style.setProperty("--hero-shift", `${heroShift}px`);
-        frame = 0;
+        root.style.setProperty("--hero-copy-shift", `${heroCopyShift}px`);
+        root.style.setProperty("--hero-copy-opacity", String(heroCopyOpacity));
+        signalCard?.style.setProperty("--parallax-y", `${Math.min(scrollY * 0.026, 30)}px`);
+        topbar?.classList.toggle("is-scrolled", scrollY > 18);
+
+        if (Math.abs(scrollY - lastScrollY) > 2) {
+          root.dataset.scrollDirection = scrollY > lastScrollY ? "down" : "up";
+          lastScrollY = scrollY;
+        }
+
+        scrollFrame = 0;
       });
     };
 
@@ -82,21 +266,50 @@ export default function ScrollAnimations() {
 
     return () => {
       observer.disconnect();
+      counterObserver.disconnect();
+      counterFrames.forEach((frame) => window.cancelAnimationFrame(frame));
+      interactionCleanups.forEach((cleanup) => cleanup());
       window.removeEventListener("scroll", updateScrollEffects);
       window.removeEventListener("resize", updateScrollEffects);
-      if (frame) window.cancelAnimationFrame(frame);
-      root.classList.remove("motion-ready");
+      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointerdown", pressCursor);
+      window.removeEventListener("pointerup", releaseCursor);
+      document.removeEventListener("mouseleave", hideCursor);
+      if (scrollFrame) window.cancelAnimationFrame(scrollFrame);
+      if (cursorFrame) window.cancelAnimationFrame(cursorFrame);
+
+      root.classList.remove("motion-ready", "has-custom-cursor");
+      root.removeAttribute("data-scroll-direction");
       root.style.removeProperty("--hero-shift");
+      root.style.removeProperty("--hero-copy-shift");
+      root.style.removeProperty("--hero-copy-opacity");
+      topbar?.classList.remove("is-scrolled");
+      signalCard?.style.removeProperty("--parallax-y");
       targets.forEach((target) => {
         target.classList.remove("scroll-reveal", "is-visible", "reveal-from-top");
         target.style.removeProperty("--reveal-delay");
+      });
+      motionCards.forEach((card) => {
+        card.classList.remove("motion-card", "is-tilting");
+        card.style.removeProperty("--tilt-x");
+        card.style.removeProperty("--tilt-y");
+        card.style.removeProperty("--glow-x");
+        card.style.removeProperty("--glow-y");
+      });
+      magneticTargets.forEach((target) => {
+        target.style.removeProperty("--magnet-x");
+        target.style.removeProperty("--magnet-y");
       });
     };
   }, []);
 
   return (
-    <div className="scroll-progress" aria-hidden="true">
-      <span ref={progressRef} />
-    </div>
+    <>
+      <div className="scroll-progress" aria-hidden="true">
+        <span ref={progressRef} />
+      </div>
+      <span className="cursor-dot" ref={cursorDotRef} aria-hidden="true" />
+      <span className="cursor-ring" ref={cursorRingRef} aria-hidden="true" />
+    </>
   );
 }

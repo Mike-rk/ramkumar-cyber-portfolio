@@ -1,5 +1,7 @@
 "use client";
 
+/* eslint-disable @next/next/no-img-element -- the same local portrait is reused for the scroll dock animation */
+
 import { useEffect, useRef } from "react";
 
 const REVEAL_SELECTOR = [
@@ -38,6 +40,7 @@ const HEADING_CURSOR_SELECTOR = "h1, h2";
 export default function ScrollAnimations() {
   const progressRef = useRef<HTMLSpanElement>(null);
   const cursorRingRef = useRef<HTMLSpanElement>(null);
+  const profileDockRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -49,6 +52,10 @@ export default function ScrollAnimations() {
     const counters = Array.from(document.querySelectorAll<HTMLElement>("[data-count-to]"));
     const topbar = document.querySelector<HTMLElement>(".topbar");
     const signalCard = document.querySelector<HTMLElement>(".signal-card");
+    const profileVisual = document.querySelector<HTMLElement>(".profile-visual");
+    const profileSource = profileVisual?.querySelector<HTMLImageElement>("img") ?? null;
+    const brandMark = document.querySelector<HTMLElement>(".topbar .brand-mark");
+    const profileDock = profileDockRef.current;
 
     targets.forEach((target) => {
       const matchingSiblings = target.parentElement
@@ -240,6 +247,26 @@ export default function ScrollAnimations() {
 
     let scrollFrame = 0;
     let lastScrollY = window.scrollY;
+    const renderProfileDock = (scrollY: number) => {
+      if (!profileDock || !profileSource || !profileVisual || !brandMark) return;
+
+      const sourceRect = profileSource.getBoundingClientRect();
+      const targetRect = brandMark.getBoundingClientRect();
+      const rawProgress = Math.min(Math.max((scrollY - 18) / 340, 0), 1);
+      const dockProgress = reducedMotion.matches ? (scrollY > 180 ? 1 : 0) : rawProgress;
+      const eased = dockProgress * dockProgress * (3 - 2 * dockProgress);
+      const interpolate = (start: number, end: number) => start + (end - start) * eased;
+
+      profileDock.style.left = `${interpolate(sourceRect.left, targetRect.left)}px`;
+      profileDock.style.top = `${interpolate(sourceRect.top, targetRect.top)}px`;
+      profileDock.style.width = `${interpolate(sourceRect.width, targetRect.width)}px`;
+      profileDock.style.height = `${interpolate(sourceRect.height, targetRect.height)}px`;
+      profileDock.style.opacity = rawProgress <= 0 ? "0" : String(Math.min(rawProgress * 5, 1));
+      profileDock.dataset.docked = dockProgress > 0.93 ? "true" : "false";
+      profileVisual.style.opacity = String(Math.max(1 - rawProgress * 3.2, 0));
+      brandMark.style.opacity = String(1 - Math.min(Math.max((dockProgress - 0.72) / 0.28, 0), 1));
+    };
+
     const updateScrollEffects = () => {
       if (scrollFrame) return;
 
@@ -257,6 +284,7 @@ export default function ScrollAnimations() {
         root.style.setProperty("--hero-copy-opacity", String(heroCopyOpacity));
         signalCard?.style.setProperty("--parallax-y", `${Math.min(scrollY * 0.026, 30)}px`);
         topbar?.classList.toggle("is-scrolled", scrollY > 18);
+        renderProfileDock(scrollY);
 
         if (Math.abs(scrollY - lastScrollY) > 2) {
           root.dataset.scrollDirection = scrollY > lastScrollY ? "down" : "up";
@@ -293,6 +321,12 @@ export default function ScrollAnimations() {
       root.style.removeProperty("--hero-copy-opacity");
       topbar?.classList.remove("is-scrolled");
       signalCard?.style.removeProperty("--parallax-y");
+      profileVisual?.style.removeProperty("opacity");
+      brandMark?.style.removeProperty("opacity");
+      if (profileDock) {
+        profileDock.removeAttribute("style");
+        profileDock.removeAttribute("data-docked");
+      }
       targets.forEach((target) => {
         target.classList.remove("scroll-reveal", "is-visible", "reveal-from-top");
         target.style.removeProperty("--reveal-delay");
@@ -316,6 +350,9 @@ export default function ScrollAnimations() {
       <div className="scroll-progress" aria-hidden="true">
         <span ref={progressRef} />
       </div>
+      <span className="profile-dock-flyer" ref={profileDockRef} aria-hidden="true">
+        <img src="./ramkumar-profile.webp" alt="" width={900} height={900} />
+      </span>
       <span className="cursor-ring" ref={cursorRingRef} aria-hidden="true" />
     </>
   );

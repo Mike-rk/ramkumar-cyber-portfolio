@@ -1,27 +1,52 @@
 /* eslint-disable @next/next/no-img-element -- local static portrait, no remote optimization needed */
+import type { CSSProperties } from "react";
+import { siAndroid, siBurpsuite, siMetasploit, siOwasp } from "simple-icons";
 import CyberChallenge from "./CyberChallenge";
 import ScrollAnimations from "./ScrollAnimations";
 
-const skills = [
+type SkillItem = {
+  label: string;
+  icon?: {
+    hex: string;
+    path: string;
+    title: string;
+  };
+  monogram?: string;
+};
+
+type SkillGroup = {
+  title: string;
+  index: string;
+  items: SkillItem[];
+};
+
+const skills: SkillGroup[] = [
   {
     title: "Web & API",
     index: "01",
-    items: ["OWASP Top 10", "IDOR", "XSS", "SQL Injection", "SSRF", "JWT Security"],
+    items: ["OWASP Top 10", "IDOR", "XSS", "SQL Injection", "SSRF", "JWT Security"].map((label) => ({ label })),
   },
   {
     title: "Testing stack",
     index: "02",
-    items: ["Burp Suite", "Nmap", "Metasploit", "OWASP ZAP", "Nessus", "MobSF"],
+    items: [
+      { label: "Burp Suite", icon: siBurpsuite },
+      { label: "Nmap", monogram: "NM" },
+      { label: "Metasploit", icon: siMetasploit },
+      { label: "OWASP ZAP", icon: siOwasp },
+      { label: "Nessus", monogram: "NE" },
+      { label: "MobSF", icon: siAndroid },
+    ],
   },
   {
     title: "Systems",
     index: "03",
-    items: ["Linux", "Android", "TCP/IP", "DNS", "HTTP/S", "Privilege Escalation"],
+    items: ["Linux", "Android", "TCP/IP", "DNS", "HTTP/S", "Privilege Escalation"].map((label) => ({ label })),
   },
   {
     title: "Methods",
     index: "04",
-    items: ["NIST CSF", "MITRE ATT&CK", "SANS CSC", "Cyber Kill Chain", "OSINT", "Reporting"],
+    items: ["NIST CSF", "MITRE ATT&CK", "SANS CSC", "Cyber Kill Chain", "OSINT", "Reporting"].map((label) => ({ label })),
   },
 ];
 
@@ -186,10 +211,29 @@ export default function Home() {
         </div>
         <div className="skill-grid">
           {skills.map((skill) => (
-            <article className="skill-card" key={skill.title}>
+            <article className={`skill-card ${skill.title === "Testing stack" ? "testing-stack-card" : ""}`} key={skill.title}>
               <div className="skill-title"><span>{skill.index}</span><h3>{skill.title}</h3></div>
               <ul>
-                {skill.items.map((item) => <li key={item}>{item}</li>)}
+                {skill.items.map((item) => (
+                  <li className={item.icon || item.monogram ? "tool-item" : undefined} key={item.label}>
+                    {item.icon || item.monogram ? (
+                      <span
+                        className="tool-mark"
+                        style={{ "--tool-color": item.icon ? `#${item.icon.hex}` : "#7559c7" } as CSSProperties}
+                        aria-hidden="true"
+                      >
+                        {item.icon ? (
+                          <svg viewBox="0 0 24 24" focusable="false">
+                            <path d={item.icon.path} />
+                          </svg>
+                        ) : (
+                          <b>{item.monogram}</b>
+                        )}
+                      </span>
+                    ) : null}
+                    <span>{item.label}</span>
+                  </li>
+                ))}
               </ul>
             </article>
           ))}

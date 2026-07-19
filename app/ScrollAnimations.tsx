@@ -33,11 +33,10 @@ const MOTION_CARD_SELECTOR = [
 ].join(",");
 
 const MAGNETIC_SELECTOR = ".button, .nav-cta";
-const INTERACTIVE_SELECTOR = "a, button, input, .motion-card";
+const HEADING_CURSOR_SELECTOR = "h1, h2";
 
 export default function ScrollAnimations() {
   const progressRef = useRef<HTMLSpanElement>(null);
-  const cursorDotRef = useRef<HTMLSpanElement>(null);
   const cursorRingRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
@@ -193,12 +192,12 @@ export default function ScrollAnimations() {
     let pointerY = -100;
     let ringX = -100;
     let ringY = -100;
-    const cursorDot = cursorDotRef.current;
     const cursorRing = cursorRingRef.current;
+    let activeHeading: HTMLElement | null = null;
 
     const drawCursor = () => {
-      ringX += (pointerX - ringX) * 0.18;
-      ringY += (pointerY - ringY) * 0.18;
+      ringX += (pointerX - ringX) * 0.3;
+      ringY += (pointerY - ringY) * 0.3;
       cursorRing?.style.setProperty("--cursor-x", `${ringX}px`);
       cursorRing?.style.setProperty("--cursor-y", `${ringY}px`);
       cursorFrame = window.requestAnimationFrame(drawCursor);
@@ -206,24 +205,32 @@ export default function ScrollAnimations() {
     const onPointerMove = (event: PointerEvent) => {
       pointerX = event.clientX;
       pointerY = event.clientY;
-      cursorDot?.style.setProperty("--cursor-x", `${pointerX}px`);
-      cursorDot?.style.setProperty("--cursor-y", `${pointerY}px`);
-      cursorDot?.classList.add("is-visible");
-      cursorRing?.classList.add("is-visible");
 
       const target = event.target instanceof Element ? event.target : null;
-      cursorRing?.classList.toggle("is-active", Boolean(target?.closest(INTERACTIVE_SELECTOR)));
-      cursorRing?.classList.toggle("is-reading", Boolean(target?.closest("h1, h2, h3, p")));
+      const heading = target?.closest<HTMLElement>(HEADING_CURSOR_SELECTOR) ?? null;
+
+      if (heading !== activeHeading) {
+        activeHeading?.classList.remove("cursor-heading-active");
+        heading?.classList.add("cursor-heading-active");
+        activeHeading = heading;
+      }
+
+      cursorRing?.classList.toggle("is-visible", Boolean(heading));
+      root.classList.toggle("heading-cursor-active", Boolean(heading));
     };
     const hideCursor = () => {
-      cursorDot?.classList.remove("is-visible");
-      cursorRing?.classList.remove("is-visible", "is-active", "is-pressed", "is-reading");
+      activeHeading?.classList.remove("cursor-heading-active");
+      activeHeading = null;
+      cursorRing?.classList.remove("is-visible", "is-pressed");
+      root.classList.remove("heading-cursor-active");
     };
-    const pressCursor = () => cursorRing?.classList.add("is-pressed");
+    const pressCursor = () => {
+      if (cursorRing?.classList.contains("is-visible")) cursorRing.classList.add("is-pressed");
+    };
     const releaseCursor = () => cursorRing?.classList.remove("is-pressed");
 
-    if (!reducedMotion.matches && finePointer.matches && cursorDot && cursorRing) {
-      root.classList.add("has-custom-cursor");
+    if (!reducedMotion.matches && finePointer.matches && cursorRing) {
+      root.classList.add("has-heading-cursor");
       cursorFrame = window.requestAnimationFrame(drawCursor);
       window.addEventListener("pointermove", onPointerMove, { passive: true });
       window.addEventListener("pointerdown", pressCursor, { passive: true });
@@ -278,7 +285,8 @@ export default function ScrollAnimations() {
       if (scrollFrame) window.cancelAnimationFrame(scrollFrame);
       if (cursorFrame) window.cancelAnimationFrame(cursorFrame);
 
-      root.classList.remove("motion-ready", "has-custom-cursor");
+      activeHeading?.classList.remove("cursor-heading-active");
+      root.classList.remove("motion-ready", "has-heading-cursor", "heading-cursor-active");
       root.removeAttribute("data-scroll-direction");
       root.style.removeProperty("--hero-shift");
       root.style.removeProperty("--hero-copy-shift");
@@ -308,7 +316,6 @@ export default function ScrollAnimations() {
       <div className="scroll-progress" aria-hidden="true">
         <span ref={progressRef} />
       </div>
-      <span className="cursor-dot" ref={cursorDotRef} aria-hidden="true" />
       <span className="cursor-ring" ref={cursorRingRef} aria-hidden="true" />
     </>
   );

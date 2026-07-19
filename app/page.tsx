@@ -326,7 +326,7 @@ export default function Home() {
       <section className="section challenge-section" id="challenge">
         <div className="challenge-copy">
           <p className="section-kicker">04 / INTERACTIVE CHALLENGE</p>
-          <h2>Think like an attacker.</h2>
+          <h2>Think like an attacker</h2>
           <p>
             Read the intelligence brief and identify the vulnerability. You get
             three attempts before the answer is declassified.
@@ -342,7 +342,7 @@ export default function Home() {
       <section className="section about-section" id="about">
         <div className="about-statement">
           <p className="section-kicker">05 / FIELD NOTES</p>
-          <h2>Curiosity, made operational.</h2>
+          <h2>Curiosity, made operational</h2>
           <p>
             I&apos;m a recent BCA graduate who learns by breaking assumptions in controlled environments—and documenting how to make them safer.
           </p>
@@ -398,6 +398,7 @@ export default function Home() {
       <strong>VAPT Analyst</strong>
       <strong>Junior Penetration Tester</strong>
       <strong>Application Security Analyst</strong>
+      <strong>Red Teaming</strong>
     </div>
   </div>
   <p className="value-intro">

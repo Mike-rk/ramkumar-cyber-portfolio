@@ -1,12 +1,41 @@
 /* eslint-disable @next/next/no-img-element -- local static portrait, no remote optimization needed */
 import type { CSSProperties } from "react";
-import { GlobeLock, Origami, ServerCog, Skull, Workflow } from "lucide-react";
+import {
+  BriefcaseBusiness,
+  CodeXml,
+  Crosshair,
+  Database,
+  FileText,
+  GlobeLock,
+  GraduationCap,
+  KeyRound,
+  ListChecks,
+  LockKeyhole,
+  Mail,
+  MapPinned,
+  MonitorCog,
+  Network,
+  Origami,
+  RefreshCcw,
+  Route,
+  ScanSearch,
+  ServerCog,
+  ShieldCheck,
+  Skull,
+  UserRoundCog,
+  Waypoints,
+  Workflow,
+} from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import {
   siAndroid,
   siBurpsuite,
+  siCisco,
+  siGithub,
   siGoogle,
   siHackthebox,
+  siLinux,
+  siMedium,
   siMetasploit,
   siOwasp,
   siTryhackme,
@@ -23,6 +52,8 @@ type BrandIcon = {
 type SkillItem = {
   label: string;
   icon?: BrandIcon;
+  Icon?: LucideIcon;
+  color?: string;
   monogram?: string;
 };
 
@@ -88,7 +119,14 @@ const skills: SkillGroup[] = [
   {
     title: "Web & API",
     index: "01",
-    items: ["OWASP Top 10", "IDOR", "XSS", "SQL Injection", "SSRF", "JWT Security"].map((label) => ({ label })),
+    items: [
+      { label: "OWASP Top 10", icon: siOwasp, color: "#111111" },
+      { label: "IDOR", Icon: KeyRound, color: "#7c3aed" },
+      { label: "XSS", Icon: CodeXml, color: "#d97706" },
+      { label: "SQL Injection", Icon: Database, color: "#2596cd" },
+      { label: "SSRF", Icon: Route, color: "#0f766e" },
+      { label: "JWT Security", Icon: ShieldCheck, color: "#4b65c7" },
+    ],
     visual: { Icon: GlobeLock, label: "WEB / API", color: "#7559c7" },
   },
   {
@@ -107,14 +145,66 @@ const skills: SkillGroup[] = [
   {
     title: "Systems",
     index: "03",
-    items: ["Linux", "Android", "TCP/IP", "DNS", "HTTP/S", "Privilege Escalation"].map((label) => ({ label })),
+    items: [
+      { label: "Linux", icon: siLinux, color: "#111111" },
+      { label: "Android", icon: siAndroid },
+      { label: "Windows", Icon: MonitorCog, color: "#0078d4" },
+      { label: "TCP/IP", Icon: Network, color: "#2563eb" },
+      { label: "HTTP/S", Icon: LockKeyhole, color: "#168b48" },
+      { label: "Privilege Escalation", Icon: UserRoundCog, color: "#7c3aed" },
+    ],
     visual: { Icon: ServerCog, label: "SYSTEMS", color: "#4b65c7" },
   },
   {
     title: "Methods",
     index: "04",
-    items: ["NIST CSF", "MITRE ATT&CK", "SANS CSC", "Cyber Kill Chain", "OSINT", "Reporting"].map((label) => ({ label })),
+    items: [
+      { label: "NIST CSF", Icon: ShieldCheck, color: "#2563eb" },
+      { label: "MITRE ATT&CK", Icon: Crosshair, color: "#d85b36" },
+      { label: "SANS CSC", Icon: ListChecks, color: "#6d28d9" },
+      { label: "Cyber Kill Chain", Icon: Waypoints, color: "#dc2626" },
+      { label: "OSINT", Icon: ScanSearch, color: "#0891b2" },
+      { label: "Reporting", Icon: FileText, color: "#7c3aed" },
+    ],
     visual: { Icon: Workflow, label: "METHODOLOGY", color: "#8a63d2" },
+  },
+];
+
+const testingLoop: Array<{
+  detail: string;
+  Icon: LucideIcon;
+  index: string;
+  title: string;
+}> = [
+  {
+    index: "01",
+    title: "Map",
+    Icon: MapPinned,
+    detail: "Enumerate assets, endpoints, roles, trust boundaries, and exposed attack paths.",
+  },
+  {
+    index: "02",
+    title: "Validate",
+    Icon: ScanSearch,
+    detail: "Reproduce suspicious behavior manually and separate real weaknesses from scanner noise.",
+  },
+  {
+    index: "03",
+    title: "Exploit",
+    Icon: Crosshair,
+    detail: "Safely prove impact, test realistic attack chains, and capture clear technical evidence.",
+  },
+  {
+    index: "04",
+    title: "Report",
+    Icon: FileText,
+    detail: "Document reproduction steps, business impact, severity, evidence, and practical remediation.",
+  },
+  {
+    index: "05",
+    title: "Retest",
+    Icon: RefreshCcw,
+    detail: "Verify fixes, check for bypasses or regressions, and record any remaining risk.",
   },
 ];
 
@@ -287,18 +377,24 @@ export default function Home() {
               <div className="skill-title"><span>{skill.index}</span><h3>{skill.title}</h3></div>
               <SkillVisual skill={skill} />
               <ul>
-                {skill.items.map((item) => (
-                  <li className={item.icon || item.monogram ? "tool-item" : undefined} key={item.label}>
-                    {item.icon || item.monogram ? (
+                {skill.items.map((item) => {
+                  const ItemIcon = item.Icon;
+                  const hasVisual = Boolean(item.icon || ItemIcon || item.monogram);
+
+                  return (
+                  <li className={hasVisual ? "tool-item" : undefined} key={item.label}>
+                    {hasVisual ? (
                       <span
-                        className="tool-mark"
-                        style={{ "--tool-color": item.icon ? `#${item.icon.hex}` : "#7559c7" } as CSSProperties}
+                        className={`tool-mark ${item.icon ? "tool-mark-brand" : ItemIcon ? "tool-mark-lucide" : "tool-mark-mono"}`}
+                        style={{ "--tool-color": item.color ?? (item.icon ? `#${item.icon.hex}` : "#7559c7") } as CSSProperties}
                         aria-hidden="true"
                       >
                         {item.icon ? (
                           <svg viewBox="0 0 24 24" focusable="false">
                             <path d={item.icon.path} />
                           </svg>
+                        ) : ItemIcon ? (
+                          <ItemIcon strokeWidth={1.8} />
                         ) : (
                           <b>{item.monogram}</b>
                         )}
@@ -306,7 +402,8 @@ export default function Home() {
                     ) : null}
                     <span>{item.label}</span>
                   </li>
-                ))}
+                  );
+                })}
               </ul>
             </article>
           ))}
@@ -314,11 +411,18 @@ export default function Home() {
         <div className="method-strip">
           <p>My testing loop</p>
           <ol>
-            <li><span>01</span> Map</li>
-            <li><span>02</span> Validate</li>
-            <li><span>03</span> Exploit</li>
-            <li><span>04</span> Report</li>
-            <li><span>05</span> Retest</li>
+            {testingLoop.map(({ detail, Icon, index, title }) => {
+              const descriptionId = `testing-loop-${title.toLowerCase()}`;
+
+              return (
+                <li key={title} tabIndex={0} aria-describedby={descriptionId}>
+                  <span className="method-step-icon" aria-hidden="true"><Icon strokeWidth={1.7} /></span>
+                  <span className="method-step-number">{index}</span>
+                  <strong>{title}</strong>
+                  <p className="method-step-detail" id={descriptionId}>{detail}</p>
+                </li>
+              );
+            })}
           </ol>
         </div>
       </section>
@@ -334,6 +438,7 @@ export default function Home() {
         <div className="credential-grid">
           <article className="credential-proof credential-cisco">
             <span className="credential-code">CISCO_01</span>
+            <BrandGlyph icon={siCisco} className="credential-visual cisco-credential-visual" />
             <p>Verified course completion</p>
             <h3>Introduction to Cybersecurity</h3>
             <span className="credential-org">Cisco Networking Academy · May 2026</span>
@@ -363,6 +468,10 @@ export default function Home() {
           </article>
           <article className="credential-proof credential-simplilearn">
             <span className="credential-code">SIMPLILEARN_03</span>
+            <span className="credential-visual simplilearn-credential-visual" aria-hidden="true">
+              <GraduationCap strokeWidth={1.55} />
+              <b>SL</b>
+            </span>
             <p>Verified course completion</p>
             <h3>Ethical Hacking 101</h3>
             <span className="credential-org">Simplilearn SkillUp · June 2025</span>
@@ -570,12 +679,30 @@ export default function Home() {
       <footer>
         <div className="footer-brand"><span className="brand-mark">RM</span><span><span className="footer-name">Ramkumar M</span><br /><small>VAPT Engineer</small></span></div>
         <div className="footer-links">
-          <a href="https://linkedin.com/in/ram-kumar45/" target="_blank" rel="noreferrer">LinkedIn ↗</a>
-          <a href="https://github.com/mike-rk" target="_blank" rel="noreferrer">GitHub ↗</a>
-          <a href="https://medium.com/@raamkz900" target="_blank" rel="noreferrer">Medium ↗</a>
-          <a href="https://tryhackme.com/p/raamk575/" target="_blank" rel="noreferrer">TryHackMe ↗</a>
-          <a href="https://profile.hackthebox.com/profile/019f455f-fa7c-73f5-b966-3dbe3c82c079" target="_blank" rel="noreferrer">HTB ↗</a>
-          <a href="mailto:raamk575@gmail.com">Email ↗</a>
+          <a href="https://linkedin.com/in/ram-kumar45/" target="_blank" rel="noreferrer">
+            <span className="footer-link-icon footer-link-icon-lucide" aria-hidden="true"><BriefcaseBusiness strokeWidth={1.8} /></span>
+            LinkedIn ↗
+          </a>
+          <a href="https://github.com/mike-rk" target="_blank" rel="noreferrer">
+            <BrandGlyph icon={siGithub} className="footer-link-icon footer-link-icon-brand" color="#f1f1e9" />
+            GitHub ↗
+          </a>
+          <a href="https://medium.com/@raamkz900" target="_blank" rel="noreferrer">
+            <BrandGlyph icon={siMedium} className="footer-link-icon footer-link-icon-brand" color="#f1f1e9" />
+            Medium ↗
+          </a>
+          <a href="https://tryhackme.com/p/raamk575/" target="_blank" rel="noreferrer">
+            <BrandGlyph icon={siTryhackme} className="footer-link-icon footer-link-icon-brand" color="#cab8ff" />
+            TryHackMe ↗
+          </a>
+          <a href="https://profile.hackthebox.com/profile/019f455f-fa7c-73f5-b966-3dbe3c82c079" target="_blank" rel="noreferrer">
+            <BrandGlyph icon={siHackthebox} className="footer-link-icon footer-link-icon-brand" color="#9fef00" />
+            HTB ↗
+          </a>
+          <a href="mailto:raamk575@gmail.com">
+            <span className="footer-link-icon footer-link-icon-lucide" aria-hidden="true"><Mail strokeWidth={1.8} /></span>
+            Email ↗
+          </a>
         </div>
         <p>© 2026 Ramkumar M. Built with intent.</p>
       </footer>

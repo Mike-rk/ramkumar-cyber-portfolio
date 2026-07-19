@@ -99,8 +99,8 @@ export default function Home() {
         <div className="hero-copy">
           <p className="eyebrow"><span className="pulse-dot" /> Seeking entry-level VAPT and penetration-testing roles</p>
           <h1>
-            I find the gap
-            <span>before attackers do.</span>
+            <span className="hero-line hero-line-solid">I find the gap</span>
+            <span className="hero-line hero-line-outline">before attackers do.</span>
           </h1>
           <p className="hero-intro">
             I&apos;m <strong className="name-inline">Ramkumar M</strong>, an offensive-security practitioner
@@ -138,10 +138,10 @@ export default function Home() {
         </aside>
 
         <div className="hero-metrics" aria-label="Key achievements">
-          <div><strong>TOP 3%</strong><span>TryHackMe globally</span></div>
-          <div><strong>80+</strong><span>hands-on security labs</span></div>
-          <div><strong>9 / 4</strong><span>findings / critical</span></div>
-          <div><strong>25+</strong><span>page technical report</span></div>
+          <div><strong><span data-count-to="3" data-count-prefix="TOP " data-count-suffix="%">TOP 3%</span></strong><span>TryHackMe globally</span></div>
+          <div><strong><span data-count-to="80" data-count-suffix="+">80+</span></strong><span>hands-on security labs</span></div>
+          <div><strong><span data-count-to="9">9</span> / <span data-count-to="4">4</span></strong><span>findings / critical</span></div>
+          <div><strong><span data-count-to="25" data-count-suffix="+">25+</span></strong><span>page technical report</span></div>
         </div>
       </section>
 
@@ -386,25 +386,25 @@ export default function Home() {
         </div>
       </section>
 
-     <section className="section value-section" id="value">
-  <div className="value-heading">
-    <div>
-      <p className="section-kicker">06 / WHAT I BRING</p>
-      <h2>Security findings your team can act on</h2>
-      <p className="value-subheading">What I Bring to Your Team</p>
-    </div>
-    <div className="target-role-box">
-      <span>ROLES I&apos;M PURSUING</span>
-      <strong>VAPT Analyst</strong>
-      <strong>Junior Penetration Tester</strong>
-      <strong>Application Security Analyst</strong>
-      <strong>Red Teaming</strong>
-    </div>
-  </div>
-  <p className="value-intro">
-    I bring an attacker&apos;s mindset backed by disciplined security practices. By combining automated assessments with thorough manual validation, I identify real-world vulnerabilities, reduce false positives, prioritize risks based on business impact, and deliver clear, actionable remediation guidance that strengthens application security and supports secure software development.
-  </p>
-  <div className="value-grid">
+      <section className="section value-section" id="value">
+        <div className="value-heading">
+          <div>
+            <p className="section-kicker">06 / WHAT I BRING</p>
+            <h2>Security findings your team can act on</h2>
+            <p className="value-subheading">What I Bring to Your Team</p>
+          </div>
+          <div className="target-role-box">
+            <span>ROLES I&apos;M PURSUING</span>
+            <strong>VAPT Analyst</strong>
+            <strong>Junior Penetration Tester</strong>
+            <strong>Application Security Analyst</strong>
+            <strong>Red Teaming</strong>
+          </div>
+        </div>
+        <p className="value-intro">
+          I bring an attacker&apos;s mindset backed by disciplined security practices. By combining automated assessments with thorough manual validation, I identify real-world vulnerabilities, reduce false positives, prioritize risks based on business impact, and deliver clear, actionable remediation guidance that strengthens application security and supports secure software development.
+        </p>
+        <div className="value-grid">
           <article>
             <span>01</span>
             <h3>Map the attack surface</h3>

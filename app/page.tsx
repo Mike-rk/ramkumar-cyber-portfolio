@@ -1,16 +1,28 @@
 /* eslint-disable @next/next/no-img-element -- local static portrait, no remote optimization needed */
 import type { CSSProperties } from "react";
-import { siAndroid, siBurpsuite, siMetasploit, siOwasp } from "simple-icons";
+import { GlobeLock, Origami, ServerCog, Skull, Workflow } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+import {
+  siAndroid,
+  siBurpsuite,
+  siGoogle,
+  siHackthebox,
+  siMetasploit,
+  siOwasp,
+  siTryhackme,
+} from "simple-icons";
 import CyberChallenge from "./CyberChallenge";
 import ScrollAnimations from "./ScrollAnimations";
 
+type BrandIcon = {
+  hex: string;
+  path: string;
+  title: string;
+};
+
 type SkillItem = {
   label: string;
-  icon?: {
-    hex: string;
-    path: string;
-    title: string;
-  };
+  icon?: BrandIcon;
   monogram?: string;
 };
 
@@ -18,13 +30,66 @@ type SkillGroup = {
   title: string;
   index: string;
   items: SkillItem[];
+  visual: {
+    brandIcon?: BrandIcon;
+    color: string;
+    Icon?: LucideIcon;
+    label: string;
+  };
 };
+
+function BrandGlyph({
+  icon,
+  className,
+  color,
+}: {
+  icon: BrandIcon;
+  className: string;
+  color?: string;
+}) {
+  return (
+    <span
+      className={className}
+      style={{ "--entity-color": color ?? `#${icon.hex}` } as CSSProperties}
+      aria-hidden="true"
+    >
+      <svg viewBox="0 0 24 24" focusable="false">
+        <path d={icon.path} />
+      </svg>
+    </span>
+  );
+}
+
+function SkillVisual({ skill }: { skill: SkillGroup }) {
+  const Icon = skill.visual.Icon;
+
+  return (
+    <div
+      className={`skill-visual ${skill.visual.brandIcon ? "brand-skill-visual" : ""}`}
+      style={{ "--visual-color": skill.visual.color } as CSSProperties}
+      aria-hidden="true"
+    >
+      <span className="skill-visual-orbit" />
+      <span className="skill-visual-icon">
+        {skill.visual.brandIcon ? (
+          <svg viewBox="0 0 24 24" focusable="false">
+            <path d={skill.visual.brandIcon.path} />
+          </svg>
+        ) : Icon ? (
+          <Icon strokeWidth={1.55} />
+        ) : null}
+      </span>
+      <span className="skill-visual-label">{skill.visual.label}</span>
+    </div>
+  );
+}
 
 const skills: SkillGroup[] = [
   {
     title: "Web & API",
     index: "01",
     items: ["OWASP Top 10", "IDOR", "XSS", "SQL Injection", "SSRF", "JWT Security"].map((label) => ({ label })),
+    visual: { Icon: GlobeLock, label: "WEB / API", color: "#7559c7" },
   },
   {
     title: "Testing stack",
@@ -37,16 +102,19 @@ const skills: SkillGroup[] = [
       { label: "Nessus", monogram: "NE" },
       { label: "MobSF", icon: siAndroid },
     ],
+    visual: { brandIcon: siBurpsuite, label: "PROXY / TEST", color: "#f97316" },
   },
   {
     title: "Systems",
     index: "03",
     items: ["Linux", "Android", "TCP/IP", "DNS", "HTTP/S", "Privilege Escalation"].map((label) => ({ label })),
+    visual: { Icon: ServerCog, label: "SYSTEMS", color: "#4b65c7" },
   },
   {
     title: "Methods",
     index: "04",
     items: ["NIST CSF", "MITRE ATT&CK", "SANS CSC", "Cyber Kill Chain", "OSINT", "Reporting"].map((label) => ({ label })),
+    visual: { Icon: Workflow, label: "METHODOLOGY", color: "#8a63d2" },
   },
 ];
 
@@ -132,9 +200,13 @@ export default function Home() {
             specializing in web, API, mobile application, and network VAPT. I manually validate attack paths and turn them into actionable remediation.
           </p>
           <div className="hero-actions">
-            <a className="button button-primary" href="#work">Explore my work <span aria-hidden="true">↓</span></a>
+            <a className="button button-primary" href="#work">
+              <span className="button-label">Explore my work</span>
+              <span className="button-orb" aria-hidden="true">↘</span>
+            </a>
             <a className="button button-ghost" href="./Ramkumar-M-VAPT-Resume.pdf" download>
-              Download My Resume
+              <span className="button-label">Download My Resume</span>
+              <span className="button-orb" aria-hidden="true">↓</span>
             </a>
           </div>
         </div>
@@ -213,6 +285,7 @@ export default function Home() {
           {skills.map((skill) => (
             <article className={`skill-card ${skill.title === "Testing stack" ? "testing-stack-card" : ""}`} key={skill.title}>
               <div className="skill-title"><span>{skill.index}</span><h3>{skill.title}</h3></div>
+              <SkillVisual skill={skill} />
               <ul>
                 {skill.items.map((item) => (
                   <li className={item.icon || item.monogram ? "tool-item" : undefined} key={item.label}>
@@ -275,6 +348,7 @@ export default function Home() {
           </article>
           <article className="credential-proof credential-google">
             <span className="credential-code">GOOGLE_02</span>
+            <BrandGlyph icon={siGoogle} className="credential-visual google-credential-visual" color="#4285f4" />
             <p>Verified course completion</p>
             <h3>Foundations of Cybersecurity</h3>
             <span className="credential-org">Google · Coursera · June 2026</span>
@@ -301,8 +375,12 @@ export default function Home() {
               View certificate <span aria-hidden="true">↗</span>
             </a>
           </article>
-          <article className="credential-proof">
+          <article className="credential-proof credential-shadowfox">
             <span className="credential-code">SHADOWFOX_04</span>
+            <span className="credential-visual shadowfox-credential-visual" aria-hidden="true">
+              <Origami strokeWidth={1.45} />
+              <b>SF</b>
+            </span>
             <p>Verified internship completion</p>
             <h3>Cyber Security Internship</h3>
             <span className="credential-org">ShadowFox · June 2026</span>
@@ -335,6 +413,7 @@ export default function Home() {
               <span className="profile-verified"><i /> PUBLIC</span>
             </div>
             <div className="lab-profile-main">
+              <BrandGlyph icon={siTryhackme} className="lab-profile-logo tryhackme-logo" color="#7559c7" />
               <strong>TOP 3%</strong>
               <div>
                 <h3>TryHackMe</h3>
@@ -356,6 +435,7 @@ export default function Home() {
               <span className="profile-verified"><i /> PUBLIC</span>
             </div>
             <div className="lab-profile-main">
+              <BrandGlyph icon={siHackthebox} className="lab-profile-logo htb-logo" color="#9fef00" />
               <strong>ACTIVE</strong>
               <div>
                 <h3>Hack The Box</h3>
@@ -418,10 +498,14 @@ export default function Home() {
               <p>Built a foundation in programming and systems, then applied it through offensive-security labs and independent tooling.</p>
             </div>
           </article>
-          <article>
+          <article className="community-timeline">
             <div className="timeline-date">ONGOING</div>
             <div>
               <p className="timeline-type">COMMUNITY</p>
+              <div className="timeline-visual defcon-visual" aria-hidden="true">
+                <Skull strokeWidth={1.35} />
+                <span>DEF CON</span>
+              </div>
               <h3>Security labs &amp; CTFs</h3>
               <p className="timeline-org">TryHackMe · Hack The Box · PortSwigger Academy</p>
               <p>Active in practical labs, DEF CON Group Coimbatore sessions, and CTF challenges spanning web security, OSINT, cryptography, reverse engineering, and forensics.</p>

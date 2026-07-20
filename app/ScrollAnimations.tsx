@@ -252,9 +252,9 @@ export default function ScrollAnimations() {
 
       const sourceRect = profileSource.getBoundingClientRect();
       const targetRect = brandMark.getBoundingClientRect();
-      const rawProgress = Math.min(Math.max((scrollY - 18) / 340, 0), 1);
-      const dockProgress = reducedMotion.matches ? (scrollY > 180 ? 1 : 0) : rawProgress;
-      const eased = dockProgress * dockProgress * (3 - 2 * dockProgress);
+      const rawProgress = scrollY > 18 ? 1 : 0;
+      const dockProgress = rawProgress;
+      const eased = dockProgress;
       const interpolate = (start: number, end: number) => start + (end - start) * eased;
 
       profileDock.style.left = `${interpolate(sourceRect.left, targetRect.left)}px`;

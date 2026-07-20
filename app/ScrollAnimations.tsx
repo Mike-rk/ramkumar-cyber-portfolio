@@ -276,7 +276,12 @@ export default function ScrollAnimations() {
         const progress = maxScroll > 0 ? Math.min(scrollY / maxScroll, 1) : 0;
         const heroShift = Math.min(scrollY * 0.09, 74);
         const heroCopyShift = Math.min(scrollY * 0.045, 38);
-        const heroCopyOpacity = Math.max(1 - scrollY / Math.max(window.innerHeight * 0.95, 1), 0.32);
+        const heroFadeStart = 120;
+        const heroFadeRange = Math.max(window.innerHeight * 0.95 - heroFadeStart, 1);
+        const heroCopyOpacity = Math.max(
+          1 - Math.max(scrollY - heroFadeStart, 0) / heroFadeRange,
+          0.32
+        );
 
         progressRef.current?.style.setProperty("--scroll-progress", String(progress));
         root.style.setProperty("--hero-shift", `${heroShift}px`);

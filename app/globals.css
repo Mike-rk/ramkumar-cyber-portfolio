@@ -261,7 +261,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .hero {
   position: relative;
   min-height: calc(100vh - 76px);
-  overflow: hidden;
+  overflow: visible;
   padding: 94px max(28px, calc((100vw - var(--max-width)) / 2)) 0;
   display: grid;
   grid-template-columns: minmax(0, 1.3fr) minmax(340px, .7fr);
